@@ -30,7 +30,8 @@ class AAncientTombCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
-
+public:
+	int Score = 0;
 protected:
 
 	/** Jump Input Action */
@@ -85,10 +86,12 @@ protected:
 public:
 
 	/** Returns the first person mesh **/
-	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
+	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; };
 
 	/** Returns first person camera component **/
-	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; };
+
+	void AddToScore(int new_score);
 
 };
 

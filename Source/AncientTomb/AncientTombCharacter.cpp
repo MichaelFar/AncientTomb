@@ -66,6 +66,12 @@ void AAncientTombCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	}
 }
 
+void AAncientTombCharacter::AddToScore(int new_score)
+{
+	Score += new_score;
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("Score is now %i"), Score));
+}
+
 
 void AAncientTombCharacter::MoveInput(const FInputActionValue& Value)
 {
