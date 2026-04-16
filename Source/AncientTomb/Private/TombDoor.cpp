@@ -18,9 +18,9 @@ void ATombDoor::BeginPlay()
 	OpenTarget = FindComponentByTag<USceneComponent>("Target");
 	Destination = OpenTarget->GetComponentLocation();
 	OriginalDestination = Destination;
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("MyOwner is %s"), *MyOwner->GetActorNameOrLabel()));
+	
 	StartLocation = GetActorLocation();
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("StartLocation is %s"), *StartLocation.ToString()));
+	
 	CloseDoor();
 }
 
@@ -28,29 +28,50 @@ void ATombDoor::BeginPlay()
 void ATombDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	InterpolateToTarget(DeltaTime);
+	
+	if (!bReachedEnd)
+	{
+		InterpolateToTarget(DeltaTime);
+	}
+		
 }
 
 void ATombDoor::OpenDoor()
 {
+	bReachedEnd = false;
 	Destination = OriginalDestination;
 }
 
 void ATombDoor::CloseDoor()
 {
+	bReachedEnd = false;
 	Destination = StartLocation;
+}
+void ATombDoor::AddOneToTriggers()
+{
+	numCurrentTriggers += 1;
+}
+void ATombDoor::SubtractOneFromTriggers()
+{
+	numCurrentTriggers -= 1;
 }
 void ATombDoor::InterpolateToTarget(float DeltaTime)
 {
-	//FVector destination = OpenTarget->GetComponentLocation();
+	
 	FVector current_location = GetActorLocation();
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("ComponentLocation is %s"), *Destination.ToString()));
+	
 	bReachedEnd = false;
 	SetActorLocation(FMath::VInterpConstantTo(current_location, Destination, DeltaTime, speed));
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("Destination is + %s"), *Destination.ToString()));
+	
 	if (FVector::Dist(current_location, Destination) <= 0.00001)
 	{
 		bReachedEnd = true;
-		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("Reached End")));
 	}
+}
+
+
+
+bool ATombDoor::CheckIfTriggersSatisfied()
+{
+	return numCurrentTriggers >= numRequiredTriggers;
 }

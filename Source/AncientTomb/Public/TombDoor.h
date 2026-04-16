@@ -29,6 +29,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool isOpen = false;
 
+	UPROPERTY(EditAnywhere)
+	int numRequiredTriggers = 1;
+	int numCurrentTriggers = 0;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,6 +42,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void OpenDoor();
 	void CloseDoor();
+	void AddOneToTriggers();
+	void SubtractOneFromTriggers();
 	void InterpolateToTarget(float DeltaTime);
+	bool CheckIfTriggersSatisfied();
 
 };

@@ -21,8 +21,18 @@ void UPressurePlate::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	}
 	if (OtherActor && OtherActor->ActorHasTag("CanTriggerPressurePlates"))
 	{
-		ConnectedTombDoor->OpenDoor();
+		
 		NumPressureObjects += 1;
+		if (NumPressureObjects >= NumNeededPressureObjects && !isActivated)
+		{
+			isActivated = true;
+			ConnectedTombDoor->AddOneToTriggers();
+		}
+		
+		if (ConnectedTombDoor->CheckIfTriggersSatisfied())
+		{
+			ConnectedTombDoor->OpenDoor();
+		}
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, FString::Printf(TEXT("ActorHasTag is %i"), OtherActor->ActorHasTag("CanTriggerPressurePlates")));
 	}
 }
@@ -37,7 +47,13 @@ void UPressurePlate::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* O
 	if (OtherActor && OtherActor->ActorHasTag("CanTriggerPressurePlates"))
 	{
 		NumPressureObjects -= 1;
-		if (NumPressureObjects == 0)
+		if (NumPressureObjects < NumNeededPressureObjects)
+		{
+			isActivated = false;
+			ConnectedTombDoor->SubtractOneFromTriggers();
+		}
+		
+		if (!ConnectedTombDoor->CheckIfTriggersSatisfied())
 		{
 			ConnectedTombDoor->CloseDoor();
 		}

@@ -18,12 +18,16 @@ class ANCIENTTOMB_API UPressurePlate : public UBoxComponent
 public:
 	UPROPERTY(EditAnywhere)
 	ATombDoor* ConnectedTombDoor;
+	UPROPERTY(EditAnywhere)
+	int NumNeededPressureObjects = 1;
 public:
 
 	UPressurePlate();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	int NumPressureObjects = 0;
+	bool isActivated = false;
+	
 protected:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
